@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(vichrak_fpga vichrak_fpga.cpp )
+add_executable(vichrak_fpga main.cpp )
 
 pico_set_program_name(vichrak_fpga "vichrak_fpga")
 pico_set_program_version(vichrak_fpga "0.1")
