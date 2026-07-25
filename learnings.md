@@ -192,3 +192,5 @@ Negative Delay (-2000 ms):
 - **Positive delay (`+2000`)** — use when callback execution time varies significantly, or when you specifically want to guarantee a minimum rest period between callback executions to prevent overlap or resource starvation.
 
 --> every freeRTOS task is an infinite loop running that never returns .. once the task is completed it will give the control back tot he scheduler
+
+-- cmake says what files bleong to the project and ninja - handles how to build them as fast as possible on cpu cores

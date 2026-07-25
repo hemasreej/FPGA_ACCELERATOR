@@ -32,6 +32,9 @@ project(vichrak_fpga C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
+set(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel)
+include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+
 
 # Add executable. Default name is the project name, version 0.1
 
@@ -46,7 +49,8 @@ pico_enable_stdio_usb(vichrak_fpga 1)
 
 # Add the standard library to the build
 target_link_libraries(vichrak_fpga
-        pico_stdlib)
+        pico_stdlib
+        FreeRTOS-Kernel-Heap4)
 
 # Add the standard include files to the build
 target_include_directories(vichrak_fpga PRIVATE
