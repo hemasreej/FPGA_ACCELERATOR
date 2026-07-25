@@ -51,6 +51,7 @@ target_link_libraries(vichrak_fpga
 # Add the standard include files to the build
 target_include_directories(vichrak_fpga PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/freertos
 )
 
 pico_add_extra_outputs(vichrak_fpga)
