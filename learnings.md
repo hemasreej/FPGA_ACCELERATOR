@@ -194,3 +194,46 @@ Negative Delay (-2000 ms):
 --> every freeRTOS task is an infinite loop running that never returns .. once the task is completed it will give the control back tot he scheduler
 
 -- cmake says what files bleong to the project and ninja - handles how to build them as fast as possible on cpu cores
+
+--> so currently i guess writing normal UART driver.. gonna write like some customised or something gonna change
+
+---
+
+## Milestone 2 — What has to be done (checklist)
+
+**Goal:** Human ↔ board CLI through a real driver + DAL (not raw `printf` forever).
+
+**Why UART:** first device into the DAL; IRQ + FreeRTOS queue pattern; CLI to test later FPGA work.
+
+**Not SPI for app data:** SPI on Shrike is mainly FPGA *config*; runtime MCU↔FPGA = custom 6-bit bridge (Milestone 3).
+
+### Done already (before M2)
+- [x] Tooling (Pico SDK, FreeRTOS, CMake)
+- [x] Hello World / USB serial
+- [x] FreeRTOS + 3 tasks (Heartbeat prio1, CLI stub prio2, Controller stub prio3)
+- [x] LED on GPIO **4** (Shrike Lite, not Pico 25)
+- [ ] JTAG / picoprobe — later when spare Pico arrives
+
+### M2 steps (in order — do not skip)
+
+| # | Task | Pass when | Status |
+|---|------|-----------|--------|
+| 1 | Create folders `dal/` and `drivers/` | Folders exist | [ ] |
+| 2 | Write `dal/dal.h` + `dal/dal.c` (registry only) | register / open / read / write / ioctl | [ ] |
+| 3 | Add DAL sources to `CMakeLists.txt` | Project builds | [ ] |
+| 4 | Smoke test: fake device + `dal_open` from a task | Name found, ops called | [ ] |
+| 5 | Write `uart_driver` (IRQ → FreeRTOS queue) | Bytes arrive without task polling HW | [ ] |
+| 6 | Register UART as `"uart0"` into DAL | `dal_open("uart0")` works | [ ] |
+| 7 | CLI uses only `dal_read` / `dal_write` | Type command → response | [ ] |
+
+### Rules while coding M2
+- DAL has **no** Pico / FreeRTOS includes — portable layer only
+- Tasks call **only** `dal_*` — never `uart_getc` / GPIO from CLI
+- UART driver owns hardware + ISR; posts with `xQueueSendFromISR` + `portYIELD_FROM_ISR`
+- USB `printf` can stay for debug until hardware UART is wired
+
+### After M2 → Milestone 3
+- Custom 6-bit FPGA bridge protocol + `bridge_rx.v`
+
+### Right now
+**Do step 1–2 only:** create folders, write `dal.h` / `dal.c`, get them reviewed before UART.
